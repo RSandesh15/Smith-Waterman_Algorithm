@@ -1,77 +1,40 @@
-def smith_waterman(seq1, seq2, match=1, mismatch=-1, gap=-1):
-    m, n = len(seq1), len(seq2)
-    score = [[0 for j in range(n + 1)] for i in range(m + 1)]
+import numpy as np
 
+def smith_waterman(s1, s2, match_score, gap_penalty):
+    m, n = len(s1), len(s2)
+    H = np.zeros((m + 1, n + 1))
     for i in range(1, m + 1):
         for j in range(1, n + 1):
-            diagonal = score[i - 1][j - 1] + (match if seq1[i - 1] == seq2[j - 1] else mismatch)
-            left = score[i][j - 1] + gap
-            up = score[i - 1][j] + gap
-            score[i][j] = max(0, diagonal, up, left)
+            diag = H[i - 1][j - 1] + match_score(s1[i - 1], s2[j - 1])
+            delete = H[i - 1][j] + gap_penalty
+            insert = H[i][j - 1] + gap_penalty
+            H[i][j] = max(0, diag, delete, insert)
+    return H[m][n]
 
-    alignment = []
-    i, j = m, n
-    while i > 0 and j > 0:
-        if score[i][j] == score[i - 1][j - 1] + (match if seq1[i - 1] == seq2[j - 1] else mismatch):
-            alignment.append((seq1[i - 1], seq2[j - 1]))
-            i -= 1
-            j -= 1
-        elif score[i][j] == score[i][j - 1] + gap:
-            alignment.append(('-', seq2[j - 1]))
-            j -= 1
-        elif score[i][j] == score[i - 1][j] + gap:
-            alignment.append((seq1[i - 1], '-'))
-            i -= 1
-    alignment.reverse()
-
-    print(score[m][n], alignment)
-
-
-smith_waterman('ATCG', 'TGCA')
-
-def needleman_wunsch(seq1, seq2, match_score=1, mismatch_score=-1, gap_score=-1):
-    m, n = len(seq1), len(seq2)
-    F = [[0 for j in range(n + 1)] for i in range(m + 1)]
-    for i in range(m + 1):
-        F[i][0] = gap_score * i
-    for j in range(n + 1):
-        F[0][j] = gap_score * j
+def needleman_wunsch(s1, s2, match_score, gap_penalty):
+    m, n = len(s1), len(s2)
+    H = np.zeros((m + 1, n + 1))
     for i in range(1, m + 1):
         for j in range(1, n + 1):
-            match = F[i - 1][j - 1] + (match_score if seq1[i - 1] == seq2[j - 1] else mismatch_score)
-            delete = F[i - 1][j] + gap_score
-            insert = F[i][j - 1] + gap_score
-            F[i][j] = max(match, delete, insert)
-    align1, align2 = '', ''
-    i, j = m, n
-    while i > 0 and j > 0:
-        score = F[i][j]
-        diag_score = F[i - 1][j - 1]
-        up_score = F[i][j - 1]
-        left_score = F[i - 1][j]
-        if score == diag_score + (match_score if seq1[i - 1] == seq2[j - 1] else mismatch_score):
-            align1 += seq1[i - 1]
-            align2 += seq2[j - 1]
-            i -= 1
-            j -= 1
-        elif score == up_score + gap_score:
-            align1 += '-'
-            align2 += seq2[j - 1]
-            j -= 1
-        elif score == left_score + gap_score:
-            align1 += seq1[i - 1]
-            align2 += '-'
-            i -= 1
-    while i > 0:
-        align1 += seq1[i - 1]
-        align2 += '-'
-        i -= 1
-    while j > 0:
-        align1 += '-'
-        align2 += seq2[j - 1]
-        j -= 1
-    align1 = align1[::-1]
-    align2 = align2[::-1]
-    print(align1, align2)
+            diag = H[i - 1][j - 1] + match_score(s1[i - 1], s2[j - 1])
+            left = H[i][j - 1] + gap_penalty
+            up = H[i - 1][j] + gap_penalty
+            H[i][j] = max(diag, left, up)
+    return H[m][n]
 
-needleman_wunsch('ATGCTA', 'GCTACG')
+def test_case(s1, s2):
+    match_score = lambda x, y: 1 if x == y else 0
+    gap_penalty = -1
+    sw_score = smith_waterman(s1, s2, match_score, gap_penalty)
+    nw_score = needleman_wunsch(s1, s2, match_score, gap_penalty)
+    if sw_score > nw_score:
+        return "Smith-Waterman is better"
+    elif nw_score > sw_score:
+        return "Needleman-Wunsch is better"
+    else:
+        return "Both algorithms give the same score"
+
+# Test case
+s1 = "AGC"
+s2 = "AAC"
+print(test_case(s1, s2))
