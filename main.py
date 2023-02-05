@@ -35,8 +35,8 @@ def test_case(s1, s2):
         return "Needleman-Wunsch is better "
 
 # Test case
-s1 = "AGCCCG"
-s2 = "AACAAA"
+s1 = "CGTAACAAGGTTTCCGTAGGTGAACCTGCGGAAGGATCATTGATGAGACCGTGGAATAAACGATCGAGTG"
+s2 = "CGTAACAAGGTTTCCGTAGGTGAACCTGCGGAAGGATCATTGTTGAGACAACAGAATATATGATCGAGTG"
 print(test_case(s1, s2))
 
 
@@ -72,8 +72,8 @@ def needleman_wunsch(seq1, seq2, match, mismatch, gap):
     return dp[m][n]
 
 if __name__ == '__main__':
-    seq1 = 'TATGCAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'
-    seq2 = 'TATGCAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'
+    seq1 = 'CGTAACAAGGTTTCCGTAGGTGAACCTGCGGAAGGATCATTGATGAGACCGTGGAATAAACGATCGAGTG'
+    seq2 = 'CGTAACAAGGTTTCCGTAGGTGAACCTGCGGAAGGATCATTGTTGAGACAACAGAATATATGATCGAGTG'
 
     start = time.time()
     score_sw = smith_waterman(seq1, seq2, 1, -1, -1)
@@ -94,7 +94,7 @@ if __name__ == '__main__':
     print("Time:", time_nw, "seconds")
 
 
-# #Gap sensitivity
+#Gap sensitivity
 
 import numpy as np
 
@@ -126,8 +126,8 @@ def needleman_wunsch(seq1, seq2, match_score, gap_penalty):
     return F[m][n]
 
 if __name__ == "__main__":
-    seq1 = "AGCGTGCC"
-    seq2 = "AGCAGTCC"
+    seq1 = "CGTAACAAGGTTTCCGTAGGTGAACCTGCGGAAGGATCATTGATGAGACCGTGGAATAAACGATCGAGTG"
+    seq2 = "CGTAACAAGGTTTCCGTAGGTGAACCTGCGGAAGGATCATTGTTGAGACAACAGAATATATGATCGAGTG"
     match_score = 1
     gap_penalty = -1
 
