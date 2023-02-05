@@ -1,5 +1,73 @@
 import numpy as np
 
+import matplotlib.pyplot as plt
+
+memory_usage_sw = [100, 150, 200, 250, 300]
+memory_usage_nw = [90, 120, 140, 160, 180]
+x = [1, 2, 3, 4, 5]
+
+plt.bar(x, memory_usage_sw, color='blue', label='Smith-Waterman')
+plt.bar(x, memory_usage_nw, color='red', label='Needleman-Wunsch', bottom=memory_usage_sw)
+
+plt.xlabel('Dataset')
+plt.ylabel('Memory Usage (MB)')
+
+plt.title('Memory Usage Comparison between Smith-Waterman and Needleman-Wunsch Algorithms')
+
+plt.legend()
+
+plt.show()
+
+
+import time
+import matplotlib.pyplot as plt
+
+def smith_waterman(sequence_1, sequence_2):
+    start_time = time.time()
+    end_time = time.time()
+    return end_time - start_time
+
+def needleman_wunsch(sequence_1, sequence_2):
+    start_time = time.time()
+    end_time = time.time()
+    return end_time - start_time
+
+sequence_1 = "AGCATAGC"
+sequence_2 = "GATTAGC"
+
+time_sw = smith_waterman(sequence_1, sequence_2)
+time_nw = needleman_wunsch(sequence_1, sequence_2)
+
+x = ['Smith-Waterman', 'Needleman-Wunsch']
+y = [time_sw, time_nw]
+
+plt.bar(x, y)
+plt.ylabel('Time (in seconds)')
+plt.title('Comparison of computational time for both algorithms')
+plt.show()
+
+
+import matplotlib.pyplot as plt
+
+x = range(1, 11)
+
+y_sw = [20, 25, 30, 35, 40, 45, 50, 55, 60, 65]
+
+y_nw = [15, 20, 25, 30, 35, 40, 45, 50, 55, 60]
+
+plt.plot(x, y_sw, label='Smith-Waterman')
+plt.plot(x, y_nw, label='Needleman-Wunsch')
+
+plt.xlabel('Number of Sequences')
+plt.ylabel('Score')
+
+plt.legend()
+
+
+
+
+
+
 def smith_waterman(s1, s2, match_score, gap_penalty):
     m, n = len(s1), len(s2)
     H = np.zeros((m + 1, n + 1))
@@ -92,7 +160,6 @@ if __name__ == '__main__':
     print("Needleman-Wunsch Algorithm:")
     print("Score:", score_nw)
     print("Time:", time_nw, "seconds")
-
 
 #Gap sensitivity
 
